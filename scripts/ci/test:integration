@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# set -e # exit on error
+# set -x # echo commands
+
+if [[ -z "${SAUCE_USERNAME}" ]] || [[ -z "${SAUCE_ACCESS_KEY}" ]]; then
+    echo
+    echo "SKIPPING SAUCELABS TESTS --- external committer"
+    echo
+    exit 0
+fi
+
+py.test -m integration              \
+    --driver SauceLabs              \
+    --self-contained-html           \
+    --html=tests/pytest-report.html \
+    --upload -n4 -r3
+
+echo `ls /home/travis/`
+echo `ls /home/travis/build/`
+echo `ls /home/travis/build/bokeh/`
+echo `ls /home/travis/build/bokeh/bokeh/`
+echo `ls /home/travis/build/bokeh/bokeh/tests/`
+echo `ls /home/travis/build/bokeh/bokeh/tests/integration/`
+echo `ls /home/travis/build/bokeh/bokeh/tests/integration/annotations`
+
+artifacts upload                        \
+    --bucket "bokeh-travis"             \
+    --target-paths "${TRAVIS_BUILD_ID}" \
+    /home/travis/build/bokeh/bokeh/tests/integration/annotations/test_color_bar_placement_and_render.html
