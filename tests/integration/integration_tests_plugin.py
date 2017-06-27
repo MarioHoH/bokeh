@@ -28,10 +28,10 @@ def output_file_url(request, file_server):
 
     output_file(file_path, mode='inline')
 
-    def tearDown():
-        if file_obj.isfile():
-            file_obj.remove()
-    request.addfinalizer(tearDown)
+    # def tearDown():
+    #     if file_obj.isfile():
+    #         file_obj.remove()
+    # request.addfinalizer(tearDown)
 
     return file_server.where_is(url)
 
